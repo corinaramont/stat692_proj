@@ -16,5 +16,5 @@ for(i in 1:ncol(data)){
     extra_ind = c(extra_ind, i)
   }
 }
-
-data %>% select(extra_vars[2])
+new = data[,-c(extra_ind)]
+     
