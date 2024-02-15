@@ -17,9 +17,11 @@ for(i in 1:ncol(data)){
     extra_ind = c(extra_ind, i)
   }
 }
+extras = data.frame(col_num = extra_ind, var_name = extra_vars)
 
 # remove empty variables
-new = data[,-c(extra_ind)]
+new = data[,-c(extra_ind)] # removes 100 empty variables
+# also pubmedid can def be rid of for analyses
 
 # summary stats
 table(new$gender) # 710 female, 783 male, 496 unknown
