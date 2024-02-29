@@ -7,6 +7,8 @@ var_ind = c(2,5,6,8,9,10,11,12,13,14,15,16)
 for(i in 1:length(var_ind)){
   data[,var_ind[i]] = as.factor(data[,var_ind[i]])
 }
+
+# create copy of data and replace certain col values w/ NA
 new_data = data
 miss_var_ind = c(11,12,14,15,16)
 srt    = proc.time()[3]
@@ -17,6 +19,10 @@ time = end - srt
 print(time)
 # time on study
 time_on_study = data$FU_AGE - data$E_AGE
+
+# summary stats
+crc_new = new_data%>% filter(CRC == 0)
+not_new = new_data%>% filter(CRC == 1)
 
 # random forest play time
 
