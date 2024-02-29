@@ -10,14 +10,8 @@ for(i in 1:length(var_ind)){
 new_data = data
 miss_var_ind = c(11,12,14,15,16)
 srt    = proc.time()[3]
-for(i in 1:length(miss_var_ind)){
-  temp = miss_var_ind[i]
-  for(j in 1:length(data[,temp])){
-    if((data[,temp])[j] == 6 | (data[,temp])[j] == 9){
-      (new_data[,temp])[j] = NA
-    } 
-  }
-}
+# if certain column values = 6 or 9, then replace the value with an NA
+new_data[, miss_var_ind][new_data[,miss_var_ind] == 6 | new_data[,miss_var_ind] == 9] = NA
 end = proc.time()[3]
 time = end - srt
 print(time)
