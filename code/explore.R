@@ -1,6 +1,7 @@
 library(dplyr)
 library(randomForest)
 library(caret)
+library(ggplot2)
 
 data = read.csv("datasets/KMCC DM CRC.csv")
 var_ind = c(2,5,6,8,9,10,11,12,13,14,15,16)
@@ -23,6 +24,7 @@ time_on_study = data$FU_AGE - data$E_AGE
 # summary stats
 crc_new = new_data%>% filter(CRC == 0)
 not_new = new_data%>% filter(CRC == 1)
+ggplot(new_data, aes(CRC, E_AGE)) + geom_boxplot()
 
 # random forest play time
 
