@@ -19,8 +19,8 @@ time_on_study = data$FU_AGE - data$E_AGE
 clean_data = na.omit(new_data)
 
 # summary stats
-crc_new = new_data%>% filter(CRC == 0)
-not_new = new_data%>% filter(CRC == 1)
+not_new = new_data%>% filter(CRC == 0)
+crc_new = new_data%>% filter(CRC == 1)
 ggplot(new_data, aes(CRC, E_AGE)) + geom_boxplot()
 
 # random forest play time
