@@ -15,13 +15,22 @@ miss_var_ind = c(11,12,14,15,16)
 # if certain column values = 6 or 9, then replace the value with an NA
 new_data[, miss_var_ind][new_data[,miss_var_ind] == 6 | new_data[,miss_var_ind] == 9] = NA
 # time on study
-time_on_study = data$FU_AGE - data$E_AGE
+new_data$time_on_study = data$FU_AGE - data$E_AGE
 clean_data = na.omit(new_data)
 
 # summary stats
 not_new = new_data%>% filter(CRC == 0)
 crc_new = new_data%>% filter(CRC == 1)
-ggplot(new_data, aes(CRC, E_AGE)) + geom_boxplot()
+par(cex.main=1)
+boxplot(time_on_study~CRC,data=new_data,
+        main="Duration enrolled in study",
+        col = c(rgb(0.83, 0.62, 0.62), rgb(0.62, 0.69, 0.83)),
+        xlab="CRC status", ylab="Time on study (years)")
+# Add a legend
+legend("topright", legend = c("non-CRC = 0 (n = 14381)","CRC = 1 (n = 189)") , 
+       col = c(rgb(0.83, 0.62, 0.62), rgb(0.62, 0.69, 0.83)), 
+       bty = "n", pch=20 , pt.cex = 3, cex = 0.85, 
+       horiz = FALSE, inset = c(0.03, 0.1))
 
 # random forest play time
 
