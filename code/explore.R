@@ -18,6 +18,26 @@ new_data[, miss_var_ind][new_data[,miss_var_ind] == 6 | new_data[,miss_var_ind] 
 new_data$time_on_study = data$FU_AGE - data$E_AGE
 clean_data = na.omit(new_data)
 
+# check for missingness
+ggplot_missing = function(x){
+  if(!require(reshape2)){warning('you need to install reshape2')} 
+  require(reshape2)
+  require(ggplot2)
+  #### This function produces a plot of the missing data pattern
+  #### in x. It is a modified version of a function in the 'neato' package
+  x %>%
+    is.na %>%
+    melt %>% ggplot(data = .,
+                    aes(x = Var2,
+                        y = Var1)) +
+    geom_raster(aes(fill = value)) + scale_fill_grey(name = "",
+                                                     labels = c("Present","Missing")) + theme_minimal() +
+    theme(axis.text.x = element_text(angle=45, vjust=0.5)) + 
+    labs(x = "Variables in Dataset",
+         y = "Rows / observations")
+} 
+ggplot_missing(new_data)
+
 # summary stats
 not_new = new_data%>% filter(CRC == 0)
 crc_new = new_data%>% filter(CRC == 1)
