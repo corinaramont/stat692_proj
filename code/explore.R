@@ -36,11 +36,21 @@ ggplot_missing = function(x){
     labs(x = "Variables in Dataset",
          y = "Rows / observations")
 } 
-ggplot_missing(new_data)
+ggplot_missing(new_data) # Moderate_Exer and hx_colorectal_polyps have majority missing
+sum(is.na(new_data$Moderate_Exer)) #num of missing Moderate_Exer values = 2436
+sum(is.na(new_data$hx_colorectal_polyps)) # num of missing hx values = 2277
+me_miss_ind = which(is.na(new_data$Moderate_Exer))
+hx_miss_ind = which(is.na(new_data$hx_colorectal_polyps))
+missing_hx = new_data[hx_miss_ind,]
+missing_me = new_data[me_miss_ind,]
+all_missing_data = rbind(missing_hx, missing_me)
+all_missing_data = distinct(all_missing_data)
 
 # summary stats
 not_new = new_data%>% filter(CRC == 0)
 crc_new = new_data%>% filter(CRC == 1)
+ggplot_missing(not_new)
+ggplot_missing(crc_new)
 par(cex.main=1)
 boxplot(time_on_study~CRC,data=new_data,
         main="Duration enrolled in study",
