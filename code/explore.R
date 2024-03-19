@@ -75,3 +75,21 @@ train_data = (remain_data[train_index,])[,-1]
 test_data = (remain_data[-train_index,])[,-1]
 
 rf = randomForest(CRC ~ ., data = train_data, proximity = T)
+
+### Visualize variable importance ----------------------------------------------
+
+# Get variable importance from the model fit
+ImpData <- as.data.frame(importance(rf))
+ImpData$Var.Names <- row.names(ImpData)
+
+ggplot(ImpData, aes(x=Var.Names, y=MeanDecreaseGini)) +
+  geom_segment( aes(x=Var.Names, xend=Var.Names, y=0, yend=MeanDecreaseGini), color="skyblue") +
+  geom_point(aes(size = MeanDecreaseGini), color="blue", alpha=0.6) +
+  theme_light() +
+  coord_flip() +
+  theme(
+    legend.position="bottom",
+    panel.grid.major.y = element_blank(),
+    panel.border = element_blank(),
+    axis.ticks.y = element_blank()
+  )
