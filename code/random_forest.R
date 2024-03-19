@@ -3,19 +3,20 @@ library(randomForest)
 library(caret)
 library(ggplot2)
 
+### Setting up data ------------------------------------------------------------
+
 data = read.csv("datasets/KMCC DM CRC.csv")
+
+# set factor variables
 var_ind = c(2,5,6,8,9,10,11,12,13,14,15,16)
 for(i in 1:length(var_ind)){
   data[,var_ind[i]] = as.factor(data[,var_ind[i]])
 }
 
-# create copy of data and replace certain col values w/ NA
 new_data = data
 miss_var_ind = c(11,12,14,15,16)
 # if certain column values = 6 or 9, then replace the value with an NA
 new_data[, miss_var_ind][new_data[,miss_var_ind] == 6 | new_data[,miss_var_ind] == 9] = NA
-# time on study
-new_data$time_on_study = data$FU_AGE - data$E_AGE
 
 # remove observations with missing values
 me_miss_ind = which(is.na(new_data$Moderate_Exer))
@@ -23,8 +24,11 @@ hx_miss_ind = which(is.na(new_data$hx_colorectal_polyps))
 ed_miss_ind = which(is.na(new_data$education))
 alc_miss_ind = which(is.na(new_data$alc_stat))
 smk_miss_ind = which(is.na(new_data$smk_stat))
-all_miss_ind = unique(c(me_miss_ind, hx_miss_ind, ed_miss_ind, alc_miss_ind, smk_miss_ind))
+all_miss_ind = unique(c(me_miss_ind, hx_miss_ind, 
+                        ed_miss_ind, alc_miss_ind, smk_miss_ind))
 all_missing_data = new_data[all_miss_ind,]
+
+# finalized dataset we are working with for modeling
 remain_data = new_data[-all_miss_ind,]
 
 ### RANDOM FOREST MODELING -----------------------------------------------------
@@ -42,11 +46,11 @@ rf = randomForest(CRC ~ ., data = train_data, proximity = T)
 
 ### Visualize variable importance ----------------------------------------------
 
-# Get variable importance from the model fit
-ImpData = as.data.frame(importance(rf))
-ImpData$Var.Names = row.names(ImpData)
+# Get variable importance from the initial model fit using training data
+imp_data = as.data.frame(importance(rf))
+imp_data$Var.Names = row.names(imp_data)
 
-ggplot(ImpData, aes(x=Var.Names, y=MeanDecreaseGini)) +
+ggplot(imp_data, aes(x=Var.Names, y=MeanDecreaseGini)) +
   geom_segment( aes(x=Var.Names, xend=Var.Names, y=0, yend=MeanDecreaseGini), color="skyblue") +
   geom_point(aes(size = MeanDecreaseGini), color="blue", alpha=0.6) +
   theme_light() +
