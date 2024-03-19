@@ -41,11 +41,12 @@ sum(is.na(new_data$Moderate_Exer)) #num of missing Moderate_Exer values = 2436
 sum(is.na(new_data$hx_colorectal_polyps)) # num of missing hx values = 2277
 me_miss_ind = which(is.na(new_data$Moderate_Exer))
 hx_miss_ind = which(is.na(new_data$hx_colorectal_polyps))
-missing_hx = new_data[hx_miss_ind,]
-missing_me = new_data[me_miss_ind,]
-all_missing_data = rbind(missing_hx, missing_me)
-all_missing_data = distinct(all_missing_data)
-
+ed_miss_ind = which(is.na(new_data$education))
+alc_miss_ind = which(is.na(new_data$alc_stat))
+smk_miss_ind = which(is.na(new_data$smk_stat))
+all_miss_ind = unique(c(me_miss_ind, hx_miss_ind, ed_miss_ind, alc_miss_ind, smk_miss_ind))
+all_missing_data = new_data[all_miss_ind,]
+remain_data = new_data[-all_miss_ind,]
 # summary stats
 not_new = new_data%>% filter(CRC == 0)
 crc_new = new_data%>% filter(CRC == 1)
@@ -68,9 +69,9 @@ legend("topright", legend = c("non-CRC = 0 (n = 14381)","CRC = 1 (n = 189)") ,
 set.seed(692)
 
 # 2. partition data for training and testing
-train_index = createDataPartition(data$CRC, p = .8, list = FALSE) %>% 
+train_index = createDataPartition(remain_data$CRC, p = .8, list = FALSE) %>% 
   as.vector(.)
-train_data = (data[train_index,])[,-1]
-test_data = (data[-train_index,])[,-1]
+train_data = (remain_data[train_index,])[,-1]
+test_data = (remain_data[-train_index,])[,-1]
 
 rf = randomForest(CRC ~ ., data = train_data, proximity = T)
