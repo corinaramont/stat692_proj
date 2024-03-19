@@ -31,7 +31,7 @@ all_missing_data = new_data[all_miss_ind,]
 # finalized dataset we are working with for modeling
 remain_data = new_data[-all_miss_ind,]
 
-### RANDOM FOREST MODELING -----------------------------------------------------
+### RANDOM FOREST MODELING with training data ----------------------------------
 
 # 1. set seed
 set.seed(692)
@@ -42,7 +42,9 @@ train_index = createDataPartition(remain_data$CRC, p = .8, list = FALSE) %>%
 train_data = (remain_data[train_index,])[,-1]
 test_data = (remain_data[-train_index,])[,-1]
 
-rf = randomForest(CRC ~ ., data = train_data, proximity = T)
+rf = randomForest(CRC ~ ., data = train_data)
+print(rf)
+#plot(rf)
 
 ### Visualize variable importance ----------------------------------------------
 
@@ -50,6 +52,7 @@ rf = randomForest(CRC ~ ., data = train_data, proximity = T)
 imp_data = as.data.frame(importance(rf))
 imp_data$Var.Names = row.names(imp_data)
 
+# the higher the mean decrease gini = the higher the variable importance
 ggplot(imp_data, aes(x=Var.Names, y=MeanDecreaseGini)) +
   geom_segment( aes(x=Var.Names, xend=Var.Names, y=0, yend=MeanDecreaseGini), color="skyblue") +
   geom_point(aes(size = MeanDecreaseGini), color="blue", alpha=0.6) +
@@ -61,3 +64,8 @@ ggplot(imp_data, aes(x=Var.Names, y=MeanDecreaseGini)) +
     panel.border = element_blank(),
     axis.ticks.y = element_blank()
   )
+
+### predict using RANDOM FOREST MODELING on testing data -----------------------
+
+rf_pred = predict(rf, test_data)
+confusionMatrix(rf_pred, test_data$CRC)
