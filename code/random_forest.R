@@ -42,12 +42,22 @@ train_index = createDataPartition(remain_data$CRC, p = .8, list = FALSE) %>%
 train_data = (remain_data[train_index,])[,-1]
 test_data = (remain_data[-train_index,])[,-1]
 
-rf = randomForest(CRC ~ ., data = train_data)
+rf = randomForest(CRC ~ ., data = train_data, ntree = 7000, sampsize = c('0' = 40, '1' = 40))
 print(rf)
 #plot(rf)
 
-### Visualize variable importance ----------------------------------------------
+# number of trees versus error plot
+oob_data = data.frame(
+  trees = rep(1:nrow(rf$err.rate), 3), 
+  type = rep(c("OOB","No history of CRC","History or currently has CRC"), 
+             each = nrow(rf$err.rate)),
+  error = c(rf$err.rate[,"OOB"], rf$err.rate[,"0"], 
+            rf$err.rate[,"1"]))
+ggplot(data = oob_data, aes(x = trees, y= error)) + 
+  geom_line(aes(color = type))
 
+
+# visualizing variable importance
 # Get variable importance from the initial model fit using training data
 imp_data = as.data.frame(importance(rf))
 imp_data$Var.Names = row.names(imp_data)
@@ -65,7 +75,7 @@ ggplot(imp_data, aes(x=Var.Names, y=MeanDecreaseGini)) +
     axis.ticks.y = element_blank()
   )
 
-### predict using RANDOM FOREST MODELING on testing data -----------------------
+### USING RANDOM FOREST MODELING ON TESTING DATA -----------------------
 
 rf_pred = predict(rf, test_data)
 confusionMatrix(rf_pred, test_data$CRC)
