@@ -43,11 +43,12 @@ train_index = createDataPartition(remain_data$CRC, p = .8, list = FALSE) %>%
 train_data = (remain_data[train_index,])[,-1]
 test_data = (remain_data[-train_index,])[,-1]
 
-rf = randomForest(CRC ~ ., data = train_data, ntree = 10000, sampsize = c('0' = 40, '1' = 40))
+rf = randomForest(CRC ~ ., data = train_data, ntree = 10000, 
+                  sampsize = c('0' = 40, '1' = 40))
 print(rf)
 #plot(rf)
 
-# number of trees versus error plot
+# number of trees versus types of error plot
 oob_data = data.frame(
   trees = rep(1:nrow(rf$err.rate), 3), 
   type = rep(c("OOB","No history of CRC","History or currently has CRC"), 
@@ -56,10 +57,16 @@ oob_data = data.frame(
             rf$err.rate[,"1"]))
 ggplot(data = oob_data, aes(x = trees, y= error)) + 
   geom_line(aes(color = type))
+plot((oob_data %>% filter(type == "OOB"))$trees,
+     (oob_data %>% filter(type == "OOB"))$error, type = "l", 
+     xlab = "Number of trees built",
+     ylab = "OOB error",
+     main = "OOB error for the number of trees built",
+     col = rgb(0.49, 0.81, 0.54))
 
 oob2_data = oob_data %>% pivot_wider(names_from = type, values_from = error)
 
-tuneRF(train_data[,-1], train_data$CRC, ntreeTry=3000,
+tuneRF(train_data[,-1], train_data$CRC, ntreeTry=5000,
        stepFactor=1.5,improve=0.01, trace=TRUE, plot=TRUE)
 
 # visualizing variable importance
