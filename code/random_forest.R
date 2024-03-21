@@ -2,6 +2,7 @@ library(dplyr)
 library(randomForest)
 library(caret)
 library(ggplot2)
+library(tidyr)
 
 ### Setting up data ------------------------------------------------------------
 
@@ -42,7 +43,7 @@ train_index = createDataPartition(remain_data$CRC, p = .8, list = FALSE) %>%
 train_data = (remain_data[train_index,])[,-1]
 test_data = (remain_data[-train_index,])[,-1]
 
-rf = randomForest(CRC ~ ., data = train_data, ntree = 7000, sampsize = c('0' = 40, '1' = 40))
+rf = randomForest(CRC ~ ., data = train_data, ntree = 10000, sampsize = c('0' = 40, '1' = 40))
 print(rf)
 #plot(rf)
 
@@ -56,6 +57,10 @@ oob_data = data.frame(
 ggplot(data = oob_data, aes(x = trees, y= error)) + 
   geom_line(aes(color = type))
 
+oob2_data = oob_data %>% pivot_wider(names_from = type, values_from = error)
+
+tuneRF(train_data[,-1], train_data$CRC, ntreeTry=3000,
+       stepFactor=1.5,improve=0.01, trace=TRUE, plot=TRUE)
 
 # visualizing variable importance
 # Get variable importance from the initial model fit using training data
