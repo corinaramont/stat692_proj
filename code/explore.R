@@ -52,11 +52,11 @@ ggplot_missing(crc_new)
 
 par(cex.main=1)
 boxplot(time_on_study~CRC,data=new_data,
-        main="Duration enrolled in study",
+        main="Duration on study",
         col = c(rgb(0.83, 0.62, 0.62), rgb(0.62, 0.69, 0.83)),
         xlab="CRC status", ylab="Time on study (years)")
 # Add a legend
-legend("topright", legend = c("non-CRC = 0 (n = 14381)","CRC = 1 (n = 189)") , 
+legend(1.25, 20,legend = c("non-CRC = 0 (n = 14381)","CRC = 1 (n = 189)") , 
        col = c(rgb(0.83, 0.62, 0.62), rgb(0.62, 0.69, 0.83)), 
        bty = "n", pch=20 , pt.cex = 3, cex = 0.85, 
        horiz = FALSE, inset = c(0.03, 0.1))
