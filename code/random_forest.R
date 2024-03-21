@@ -61,12 +61,12 @@ plot((oob_data %>% filter(type == "OOB"))$trees,
      (oob_data %>% filter(type == "OOB"))$error, type = "l", 
      xlab = "Number of trees built",
      ylab = "OOB error",
-     main = "OOB error for the number of trees built",
-     col = rgb(0.49, 0.81, 0.54))
+     main = "OOB error for the number of trees built")
+abline(v = 2900,col = rgb(0.49, 0.81, 0.54))
 
 oob2_data = oob_data %>% pivot_wider(names_from = type, values_from = error)
 
-tuneRF(train_data[,-1], train_data$CRC, ntreeTry=5000,
+tuneRF(train_data[,-1], train_data$CRC, ntreeTry=2900,
        stepFactor=1.5,improve=0.01, trace=TRUE, plot=TRUE)
 
 # visualizing variable importance
