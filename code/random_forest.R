@@ -30,7 +30,9 @@ all_miss_ind = unique(c(me_miss_ind, hx_miss_ind,
 all_missing_data = new_data[all_miss_ind,]
 
 # finalized dataset we are working with for modeling
-remain_data = new_data[-all_miss_ind,]
+remain_data = (new_data[-all_miss_ind,])[,-1]
+remain0_data = remain_data %>% filter(CRC == 0)
+remain1_data = remain_data %>% filter(CRC == 1)
 
 ### RANDOM FOREST MODELING with training data ----------------------------------
 
@@ -38,14 +40,20 @@ remain_data = new_data[-all_miss_ind,]
 set.seed(692)
 
 ## 2. partition data for training and testing
-train_index = createDataPartition(remain_data$CRC, p = .8, list = FALSE) %>% 
+train0_index = createDataPartition(remain0_data$CRC, p = .8, list = FALSE) %>% 
   as.vector(.)
-train_data = (remain_data[train_index,])[,-1]
-test_data = (remain_data[-train_index,])[,-1]
+train1_index = createDataPartition(remain1_data$CRC, p = 0.67, list = FALSE) %>%
+  as.vector(.)
+train0 = remain0_data[train0_index,]
+train1 = remain1_data[train1_index,]
+test0 = remain0_data[-train0_index,]
+test1 = remain1_data[-train1_index,]
+train_data = rbind(train0, train1)
+test_data = rbind(test0, test1)
 
 ## 3. run model
 rf = randomForest(CRC ~ ., data = train_data, ntree = 10000, 
-                  sampsize = c('0' = 40, '1' = 40))
+                  sampsize = c('0' = 60, '1' = 40))
 print(rf)
 
 
@@ -69,16 +77,21 @@ plot((oob_data %>% filter(type == "OOB"))$trees,
      xlab = "Number of trees built",
      ylab = "OOB error",
      main = "OOB error for the number of trees built")
-abline(v = 2900,col = rgb(0.49, 0.81, 0.54))
+#abline(v = 1400,col = rgb(0.49, 0.81, 0.54))
 
 
 ## 2. tune number of variables selected at each split aka mtry
-tuneRF(train_data[,-1], train_data$CRC, ntreeTry=2900,
-       stepFactor=1.5,improve=0.01, trace=TRUE, plot=TRUE)
-
+tuneRF(train_data[,-1], train_data$CRC, nTreeTry = 1400, 
+       stepFactor=1.5,improve=0.01, trace=TRUE, plot=TRUE,
+       sampsize = c('0' = 40, '1' = 40))
 
 
 ### RERUN RANDOM FOREST USING TUNED PARAMETERS ---------------------------------
+
+rf_final = randomForest(CRC ~ ., data = train_data, ntree = 10000, 
+                        sampsize = c('0' = 40, '1' = 40))
+
+
 
 # visualizing variable importance
 # Get variable importance from the initial model fit using training data
