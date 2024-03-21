@@ -34,21 +34,26 @@ remain_data = new_data[-all_miss_ind,]
 
 ### RANDOM FOREST MODELING with training data ----------------------------------
 
-# 1. set seed
+## 1. set seed
 set.seed(692)
 
-# 2. partition data for training and testing
+## 2. partition data for training and testing
 train_index = createDataPartition(remain_data$CRC, p = .8, list = FALSE) %>% 
   as.vector(.)
 train_data = (remain_data[train_index,])[,-1]
 test_data = (remain_data[-train_index,])[,-1]
 
+## 3. run model
 rf = randomForest(CRC ~ ., data = train_data, ntree = 10000, 
                   sampsize = c('0' = 40, '1' = 40))
 print(rf)
-#plot(rf)
 
-# number of trees versus types of error plot
+
+### TUNING RANDOM FOREST -------------------------------------------------------
+
+## 1. tune number of trees built aka ntree
+
+# plot with all 3 types of errors
 oob_data = data.frame(
   trees = rep(1:nrow(rf$err.rate), 3), 
   type = rep(c("OOB","No history of CRC","History or currently has CRC"), 
@@ -57,6 +62,8 @@ oob_data = data.frame(
             rf$err.rate[,"1"]))
 ggplot(data = oob_data, aes(x = trees, y= error)) + 
   geom_line(aes(color = type))
+
+# plot with only OOB
 plot((oob_data %>% filter(type == "OOB"))$trees,
      (oob_data %>% filter(type == "OOB"))$error, type = "l", 
      xlab = "Number of trees built",
@@ -64,10 +71,14 @@ plot((oob_data %>% filter(type == "OOB"))$trees,
      main = "OOB error for the number of trees built")
 abline(v = 2900,col = rgb(0.49, 0.81, 0.54))
 
-oob2_data = oob_data %>% pivot_wider(names_from = type, values_from = error)
 
+## 2. tune number of variables selected at each split aka mtry
 tuneRF(train_data[,-1], train_data$CRC, ntreeTry=2900,
        stepFactor=1.5,improve=0.01, trace=TRUE, plot=TRUE)
+
+
+
+### RERUN RANDOM FOREST USING TUNED PARAMETERS ---------------------------------
 
 # visualizing variable importance
 # Get variable importance from the initial model fit using training data
@@ -87,7 +98,8 @@ ggplot(imp_data, aes(x=Var.Names, y=MeanDecreaseGini)) +
     axis.ticks.y = element_blank()
   )
 
-### USING RANDOM FOREST MODELING ON TESTING DATA -----------------------
+
+### USING RANDOM FOREST MODELING ON TESTING DATA -------------------------------
 
 rf_pred = predict(rf, test_data)
 confusionMatrix(rf_pred, test_data$CRC)
