@@ -86,25 +86,28 @@ plot((oob_data %>% filter(type == "OOB"))$trees,
      xlab = "Number of trees built",
      ylab = "OOB error",
      main = "OOB error for the number of trees built")
-#abline(v = 1400,col = rgb(0.49, 0.81, 0.54))
+abline(v = 5100,col = rgb(0.49, 0.81, 0.54))
 
 
 ## 2. tune number of variables selected at each split aka mtry
-tuneRF(train_data[,-1], train_data$CRC, nTreeTry = 1400, 
+tuneRF(train_data[,-1], train_data$CRC, nTreeTry = 5100, 
        stepFactor=1.5,improve=0.01, trace=TRUE, plot=TRUE,
        sampsize = c('0' = 40, '1' = 40))
 
 
 ### RERUN RANDOM FOREST USING TUNED PARAMETERS ---------------------------------
-
-rf_final = randomForest(CRC ~ ., data = train_data, ntree = 10000, 
-                        sampsize = c('0' = 40, '1' = 40))
-
+rm(rf1)
+rm(rf2)
+rm(rf3)
+rm(rf5)
+rf_final = randomForest(CRC ~ ., data = train_data, ntree = 5100, 
+                        sampsize = c('0' = 60, '1' = 60))
+print(rf_final)
 
 
 # visualizing variable importance
 # Get variable importance from the initial model fit using training data
-imp_data = as.data.frame(importance(rf))
+imp_data = as.data.frame(importance(rf_final))
 imp_data$Var.Names = row.names(imp_data)
 
 # the higher the mean decrease gini = the higher the variable importance
