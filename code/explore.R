@@ -61,4 +61,19 @@ legend(1.25, 20,legend = c("non-CRC = 0 (n = 14381)","CRC = 1 (n = 189)") ,
        bty = "n", pch=20 , pt.cex = 3, cex = 0.85, 
        horiz = FALSE, inset = c(0.03, 0.1))
 
+### Graphs and figures of our analyzed data ------------------------------------
 
+# remove observations with missing values
+me_miss_ind = which(is.na(new_data$Moderate_Exer))
+hx_miss_ind = which(is.na(new_data$hx_colorectal_polyps))
+ed_miss_ind = which(is.na(new_data$education))
+alc_miss_ind = which(is.na(new_data$alc_stat))
+smk_miss_ind = which(is.na(new_data$smk_stat))
+all_miss_ind = unique(c(me_miss_ind, hx_miss_ind, 
+                        ed_miss_ind, alc_miss_ind, smk_miss_ind))
+all_missing_data = new_data[all_miss_ind,]
+
+# finalized dataset we are working with for modeling
+remain_data = (new_data[-all_miss_ind,])[,-1]
+remain0_data = remain_data %>% filter(CRC == 0)
+remain1_data = remain_data %>% filter(CRC == 1)
