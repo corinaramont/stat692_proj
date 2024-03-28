@@ -52,8 +52,16 @@ train_data = rbind(train0, train1)
 test_data = rbind(test0, test1)
 
 ## 3. run model
-rf = randomForest(CRC ~ ., data = train_data, ntree = 10000, 
-                  sampsize = c('0' = 60, '1' = 40))
+rf1 = randomForest(CRC ~ ., data = train_data, ntree = 10000, 
+                  sampsize = c('0' = 30, '1' = 30))
+rf2 = randomForest(CRC ~ ., data = train_data, ntree = 10000, 
+                   sampsize = c('0' = 40, '1' = 40))
+rf3 = randomForest(CRC ~ ., data = train_data, ntree = 10000, 
+             sampsize = c('0' = 50, '1' = 50))
+rf4 = randomForest(CRC ~ ., data = train_data, ntree = 10000, 
+                   sampsize = c('0' = 60, '1' = 60))
+rf5 =randomForest(CRC ~ ., data = train_data, ntree = 10000, 
+             sampsize = c('0' = 70, '1' = 70))
 print(rf)
 
 
@@ -62,6 +70,7 @@ print(rf)
 ## 1. tune number of trees built aka ntree
 
 # plot with all 3 types of errors
+rf = rf4 # using 60,60
 oob_data = data.frame(
   trees = rep(1:nrow(rf$err.rate), 3), 
   type = rep(c("OOB","No history of CRC","History or currently has CRC"), 
@@ -114,5 +123,5 @@ ggplot(imp_data, aes(x=Var.Names, y=MeanDecreaseGini)) +
 
 ### USING RANDOM FOREST MODELING ON TESTING DATA -------------------------------
 
-rf_pred = predict(rf, test_data)
+rf_pred = predict(rf_final, test_data)
 confusionMatrix(rf_pred, test_data$CRC)
