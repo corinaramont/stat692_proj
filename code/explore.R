@@ -77,3 +77,14 @@ all_missing_data = new_data[all_miss_ind,]
 remain_data = (new_data[-all_miss_ind,])[,-1]
 remain0_data = remain_data %>% filter(CRC == 0)
 remain1_data = remain_data %>% filter(CRC == 1)
+
+par(cex.main=1)
+boxplot(FU_AGE~CRC,data=remain_data,
+        main="BL age of groups",
+        col = c(rgb(0.83, 0.62, 0.62), rgb(0.62, 0.69, 0.83)),
+        xlab="CRC status", ylab="BL age (years)")
+# Add a legend
+legend(1.25, 20,legend = c("non-CRC = 0 (n = 14381)","CRC = 1 (n = 189)") , 
+       col = c(rgb(0.83, 0.62, 0.62), rgb(0.62, 0.69, 0.83)), 
+       bty = "n", pch=20 , pt.cex = 3, cex = 0.85, 
+       horiz = FALSE, inset = c(0.03, 0.1))
