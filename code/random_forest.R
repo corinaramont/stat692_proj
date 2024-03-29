@@ -85,7 +85,7 @@ plot((oob_data %>% filter(type == "OOB"))$trees,
      (oob_data %>% filter(type == "OOB"))$error, type = "l", 
      xlab = "Number of trees built",
      ylab = "OOB error",
-     main = "OOB error for the number of trees built")
+d     main = "OOB error for the number of trees built")
 abline(v = 5100,col = rgb(0.49, 0.81, 0.54))
 
 
@@ -128,3 +128,14 @@ ggplot(imp_data, aes(x=Var.Names, y=MeanDecreaseGini)) +
 
 rf_pred = predict(rf_final, test_data)
 confusionMatrix(rf_pred, test_data$CRC)
+
+library(ROCR)
+perf = prediction(rf_pred[,2], mydata$Creditability)
+# 1. Area under curve
+auc = performance(perf, "auc")
+auc
+# 2. True Positive and Negative Rate
+pred3 = performance(perf, "tpr","fpr")
+# 3. Plot the ROC curve
+plot(pred3,main="ROC Curve for Random Forest",col=2,lwd=2)
+abline(a=0,b=1,lwd=2,lty=2,col="gray")
