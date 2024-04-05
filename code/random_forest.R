@@ -128,14 +128,3 @@ ggplot(imp_data, aes(x=Var.Names, y=MeanDecreaseGini)) +
 
 rf_pred = predict(rf_final, test_data)
 confusionMatrix(rf_pred, test_data$CRC)
-
-library(ROCR)
-perf = prediction(rf_pred[,2], mydata$Creditability)
-# 1. Area under curve
-auc = performance(perf, "auc")
-auc
-# 2. True Positive and Negative Rate
-pred3 = performance(perf, "tpr","fpr")
-# 3. Plot the ROC curve
-plot(pred3,main="ROC Curve for Random Forest",col=2,lwd=2)
-abline(a=0,b=1,lwd=2,lty=2,col="gray")
