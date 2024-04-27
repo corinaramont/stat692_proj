@@ -85,7 +85,7 @@ plot((oob_data %>% filter(type == "OOB"))$trees,
      (oob_data %>% filter(type == "OOB"))$error, type = "l", 
      xlab = "Number of trees built",
      ylab = "OOB error",
-d     main = "OOB error for the number of trees built")
+     main = "OOB error for the number of trees built")
 abline(v = 5100,col = rgb(0.49, 0.81, 0.54))
 
 
