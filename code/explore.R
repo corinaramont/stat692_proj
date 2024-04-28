@@ -16,7 +16,7 @@ miss_var_ind = c(11,12,14,15,16)
 new_data[, miss_var_ind][new_data[,miss_var_ind] == 6 | 
                            new_data[,miss_var_ind] == 9] = NA
 # time on study
-new_data$time_on_study = data$FU_AGE - data$E_AGE
+time_on_study = data$FU_AGE - data$E_AGE
 
 ### Checking for missingness ---------------------------------------------------
 
@@ -77,6 +77,7 @@ all_missing_data = new_data[all_miss_ind,]
 remain_data = (new_data[-all_miss_ind,])[,-1]
 remain0_data = remain_data %>% filter(CRC == 0)
 remain1_data = remain_data %>% filter(CRC == 1)
+cor(remain_data[,c(2,3,6)])
 
 par(cex.main=1)
 boxplot(FU_AGE~CRC,data=remain_data,
