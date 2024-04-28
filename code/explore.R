@@ -77,7 +77,9 @@ all_missing_data = new_data[all_miss_ind,]
 remain_data = (new_data[-all_miss_ind,])[,-1]
 remain0_data = remain_data %>% filter(CRC == 0)
 remain1_data = remain_data %>% filter(CRC == 1)
+cor(remain_data[,-1])
 
+# figures
 par(cex.main=1)
 boxplot(FU_AGE~CRC,data=remain_data,
         main="BL age of groups",
