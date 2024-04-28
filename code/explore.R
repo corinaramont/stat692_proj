@@ -79,6 +79,7 @@ remain0_data = remain_data %>% filter(CRC == 0)
 remain1_data = remain_data %>% filter(CRC == 1)
 cor(remain_data[,c(2,3,6)])
 
+# figures
 par(cex.main=1)
 boxplot(FU_AGE~CRC,data=remain_data,
         main="BL age of groups",

@@ -52,16 +52,16 @@ train_data = rbind(train0, train1)
 test_data = rbind(test0, test1)
 
 ## 3. run model
-rf1 = randomForest(CRC ~ ., data = train_data, ntree = 10000, 
-                  sampsize = c('0' = 30, '1' = 30))
-rf2 = randomForest(CRC ~ ., data = train_data, ntree = 10000, 
-                   sampsize = c('0' = 40, '1' = 40))
-rf3 = randomForest(CRC ~ ., data = train_data, ntree = 10000, 
-             sampsize = c('0' = 50, '1' = 50))
+#rf1 = randomForest(CRC ~ ., data = train_data, ntree = 10000, 
+#                  sampsize = c('0' = 30, '1' = 30))
+#rf2 = randomForest(CRC ~ ., data = train_data, ntree = 10000, 
+#                   sampsize = c('0' = 40, '1' = 40))
+#rf3 = randomForest(CRC ~ ., data = train_data, ntree = 10000, 
+#             sampsize = c('0' = 50, '1' = 50))
 rf4 = randomForest(CRC ~ ., data = train_data, ntree = 10000, 
                    sampsize = c('0' = 60, '1' = 60))
-rf5 =randomForest(CRC ~ ., data = train_data, ntree = 10000, 
-             sampsize = c('0' = 70, '1' = 70))
+#rf5 =randomForest(CRC ~ ., data = train_data, ntree = 10000, 
+#             sampsize = c('0' = 70, '1' = 70))
 print(rf)
 
 
