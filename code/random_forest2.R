@@ -124,7 +124,7 @@ ggplot(imp_data, aes(x=Var.Names, y=MeanDecreaseGini)) +
     panel.grid.major.y = element_blank(),
     panel.border = element_blank(),
     axis.ticks.y = element_blank()
-  )
+  )+xlab("Variable Names") + ylab("Mean Decrease Gini")+ggtitle("Importance of Variables in Model")
 
 
 ### USING RANDOM FOREST MODELING ON TESTING DATA -------------------------------
