@@ -16,7 +16,19 @@ miss_var_ind = c(11,12,14,15,16)
 new_data[, miss_var_ind][new_data[,miss_var_ind] == 6 | 
                            new_data[,miss_var_ind] == 9] = NA
 # time on study
-time_on_study = data$FU_AGE - data$E_AGE
+data$avg_age = (data$FU_AGE + data$E_AGE)/2
+
+# figures
+par(cex.main=1)
+boxplot(avg_age~CRC,data=data,
+        main="Average age during the study",
+        col = c(rgb(0.83, 0.62, 0.62), rgb(0.62, 0.69, 0.83)),
+        xlab="CRC status", ylab="Age in years")
+# Add a legend
+legend(1.75,100,legend = c("non-CRC = 0 (n = 14381)","CRC = 1 (n = 189)") , 
+       col = c(rgb(0.83, 0.62, 0.62), rgb(0.62, 0.69, 0.83)), 
+       bty = "n", pch=20 , pt.cex = 3, cex = 0.85, 
+       horiz = FALSE, inset = c(0.03, 0.1))
 
 ### Checking for missingness ---------------------------------------------------
 
@@ -50,17 +62,6 @@ crc_new = new_data%>% filter(CRC == 1)
 ggplot_missing(not_new)
 ggplot_missing(crc_new)
 
-par(cex.main=1)
-boxplot(time_on_study~CRC,data=new_data,
-        main="Duration on study",
-        col = c(rgb(0.83, 0.62, 0.62), rgb(0.62, 0.69, 0.83)),
-        xlab="CRC status", ylab="Time on study (years)")
-# Add a legend
-legend(1.25, 20,legend = c("non-CRC = 0 (n = 14381)","CRC = 1 (n = 189)") , 
-       col = c(rgb(0.83, 0.62, 0.62), rgb(0.62, 0.69, 0.83)), 
-       bty = "n", pch=20 , pt.cex = 3, cex = 0.85, 
-       horiz = FALSE, inset = c(0.03, 0.1))
-
 ### Graphs and figures of our analyzed data ------------------------------------
 
 # remove observations with missing values
@@ -79,14 +80,3 @@ remain0_data = remain_data %>% filter(CRC == 0)
 remain1_data = remain_data %>% filter(CRC == 1)
 cor(remain_data[,c(2,3,6)])
 
-# figures
-par(cex.main=1)
-boxplot(FU_AGE~CRC,data=remain_data,
-        main="BL age of groups",
-        col = c(rgb(0.83, 0.62, 0.62), rgb(0.62, 0.69, 0.83)),
-        xlab="CRC status", ylab="BL age (years)")
-# Add a legend
-legend(1.25, 20,legend = c("non-CRC = 0 (n = 14381)","CRC = 1 (n = 189)") , 
-       col = c(rgb(0.83, 0.62, 0.62), rgb(0.62, 0.69, 0.83)), 
-       bty = "n", pch=20 , pt.cex = 3, cex = 0.85, 
-       horiz = FALSE, inset = c(0.03, 0.1))
