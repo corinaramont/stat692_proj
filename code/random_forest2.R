@@ -3,6 +3,7 @@ library(randomForest)
 library(caret)
 library(ggplot2)
 library(tidyr)
+library(reprtree)
 
 ### Setting up data ------------------------------------------------------------
 
@@ -126,6 +127,7 @@ ggplot(imp_data, aes(x=Var.Names, y=MeanDecreaseGini)) +
     axis.ticks.y = element_blank()
   )+xlab("Variable Names") + ylab("Mean Decrease Gini")+ggtitle("Importance of Variables in Model")
 
+reprtree:::plot.getTree(rf_final)
 
 ### USING RANDOM FOREST MODELING ON TESTING DATA -------------------------------
 

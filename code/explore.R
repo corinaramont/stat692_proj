@@ -30,6 +30,16 @@ legend(1.75,100,legend = c("non-CRC = 0 (n = 14381)","CRC = 1 (n = 189)") ,
        bty = "n", pch=20 , pt.cex = 3, cex = 0.85, 
        horiz = FALSE, inset = c(0.03, 0.1))
 
+boxplot(glu~CRC,data=data,
+        main="Fasting glucose levels in patients",
+        col = c(rgb(0.83, 0.62, 0.62), rgb(0.62, 0.69, 0.83)),
+        xlab="CRC status", ylab="Glucose level (mg/dl)")
+# Add a legend
+legend("topright",legend = c("non-CRC = 0 (n = 14381)","CRC = 1 (n = 189)") , 
+       col = c(rgb(0.83, 0.62, 0.62), rgb(0.62, 0.69, 0.83)), 
+       bty = "n", pch=20 , pt.cex = 3, cex = 0.85, 
+       horiz = FALSE, inset = c(0.03, 0.1))
+
 ### Checking for missingness ---------------------------------------------------
 
 ggplot_missing = function(x){
