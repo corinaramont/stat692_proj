@@ -37,6 +37,7 @@ remain_data = remain_data[,-c(2,3)] # removes FU_AGE and E_AGE
 
 remain0_data = remain_data %>% filter(CRC== 0)
 remain1_data = remain_data %>% filter(CRC == 1)
+cor(remain_data[,c(2,3,6)]) # correlation of continuous variables
 
 ### RANDOM FOREST MODELING with training data ----------------------------------
 
