@@ -89,4 +89,3 @@ remain_data = (new_data[-all_miss_ind,])[,-1]
 remain0_data = remain_data %>% filter(CRC == 0)
 remain1_data = remain_data %>% filter(CRC == 1)
 cor(remain_data[,c(2,3,6)])
-s
