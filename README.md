@@ -4,10 +4,11 @@
 This project is completed as part of a 2024 capstone for the MS in Statistics program at Texas A&M University. 
 
 ## Data
-Source: https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004977 
+Source: https://doi.org/10.1371/journal.pone.0188465 
 
-A group of researchers uniformly processed about 2000 samples compiled from 8 different studies to test different models and their prediction accuracy which ended up forming the MetAML - Metagenomic prediction Analysis based on Machine Learning. 
+The data is part of the Korea Multicenter Cancer Cohort project which focuses on understanding and learning the relationships between certain factors (e.g., lifestyle and
+environmental) with cancer occurrence. The CRC dataset is a compilation of 14570 patients who have had a history of CRC or not. The patients were asked questions regarding various topics such as their lifestyle (e.g., alcohol consumption history, amount of exercise during a week), clinical information (e.g., history of polyps found, diabetes mellitus presence) and others (e.g., education level).
 
 
 ## Project Description
-The aim of this project is to...
+The aim of this project is to understand the different factors that influence the presence of CRC in Korean patients and their effects by implementing random forest.
